@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Chatbot</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial;
+    }
+
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background: linear-gradient(-45deg, #ff6ec4, #7873f5, #4facfe, #43e97b);
+        background-size: 400% 400%;
+        animation: gradientBG 10s ease infinite;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .chat-container {
+        width: 370px;
+        height: 550px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .header {
+        padding: 15px;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        background: rgba(0,0,0,0.3);
+        position: relative;
+    }
+
+    .clear-btn {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background: red;
+        border: none;
+        color: white;
+        padding: 5px 8px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .chat-box {
+        flex: 1;
+        padding: 10px;
+        overflow-y: auto;
+    }
+
+    .message {
+        margin: 8px 0;
+        max-width: 75%;
+        padding: 10px;
+        border-radius: 12px;
+        animation: fadeIn 0.3s ease-in;
+        position: relative;
+        color: white;
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(10px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    .user {
+        background: #007bff;
+        margin-left: auto;
+    }
+
+    .bot {
+        background: #28a745;
+        margin-right: auto;
+    }
+
+    .time {
+        font-size: 10px;
+        opacity: 0.7;
+        margin-top: 5px;
+        text-align: right;
+    }
+
+    .input-area {
+        display: flex;
+        background: rgba(0,0,0,0.3);
+    }
+
+    input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: white;
+    }
+
+    input::placeholder {
+        color: #ddd;
+    }
+
+    button {
+        padding: 10px;
+        border: none;
+        background: orange;
+        color: white;
+        cursor: pointer;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">
+        💬 Pro Chatbot
+        <button class="clear-btn" onclick="clearChat()">Clear</button>
+    </div>
+
+    <div class="chat-box" id="chatBox"></div>
+
+    <div class="input-area">
+        <input type="text" id="input" placeholder="Type message..." onkeypress="enter(event)">
+        <button onclick="send()">Send</button>
+    </div>
+</div>
+
+<script>
+    function send() {
+        let input = document.getElementById("input");
+        let text = input.value.trim();
+        if (text === "") return;
+
+        addMsg(text, "user");
+        input.value = "";
+
+        setTimeout(() => {
+            let reply = botReply(text);
+            addMsg(reply, "bot");
+        }, 600);
+    }
+
+    function enter(e) {
+        if (e.key === "Enter") send();
+    }
+
+    function addMsg(text, type) {
+        let chat = document.getElementById("chatBox");
+
+        let div = document.createElement("div");
+        div.className = "message " + type;
+
+        let time = new Date().toLocaleTimeString();
+
+        div.innerHTML = text + "<div class='time'>" + time + "</div>";
+
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function clearChat() {
+        document.getElementById("chatBox").innerHTML = "";
+    }
+
+    function botReply(msg) {
+        msg = msg.toLowerCase();
+
+        if (msg.includes("hi") || msg.includes("hello")) return "Hello 😊";
+        if (msg.includes("how are you")) return "I'm great! 🤖";
+        if (msg.includes("time")) return "⏰ " + new Date().toLocaleTimeString();
+        if (msg.includes("date")) return "📅 " + new Date().toLocaleDateString();
+        if (msg.includes("joke")) return "😂 Why did the computer sleep? Because it had a byte!";
+        if (msg.includes("bye")) return "👋 Goodbye!";
+
+        return "🤔 I didn't understand that.";
+    }
+</script>
+
+</body>
+</html>
